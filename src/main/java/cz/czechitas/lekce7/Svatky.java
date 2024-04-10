@@ -13,7 +13,7 @@ import java.util.Set;
  * Třída s informacemi o tom,kdo má kdy svátek.
  */
 public class Svatky {
-    private final Map<String, MonthDay> svatky = new HashMap<>();
+    public final Map<String, MonthDay> svatky = new HashMap<>();
 
     public Svatky() {
         svatky.put("Zikmund", MonthDay.of(5, 2));

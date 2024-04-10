@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Month;
 import java.time.MonthDay;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,8 +20,13 @@ class SvatkyTest {
     @Test
     void vratKdyMaSvatek() {
         Svatky svatky = new Svatky();
-        assertEquals(MonthDay.of(5, 18), svatky.vratKdyMaSvatek("Nataša"));
-        assertNull(svatky.vratKdyMaSvatek("Eva"));
+
+        String jmenoJeVSeznamu = "Nataša";
+        MonthDay datumJeVSeznamu = MonthDay.of(5, 18);
+        String jmenoNeniVSeznamu = "Pytlik";
+
+        assertEquals(datumJeVSeznamu, svatky.vratKdyMaSvatek(jmenoJeVSeznamu), "Jmeno " + jmenoJeVSeznamu + " melo byt v seznamu pod datem " + datumJeVSeznamu + ".");
+        assertNull(svatky.vratKdyMaSvatek(jmenoNeniVSeznamu), "Jmeno " + jmenoNeniVSeznamu + " nemelo byt v seznamu.");
     }
 
     /**
@@ -28,20 +35,12 @@ class SvatkyTest {
     @Test
     void jeVSeznamu() {
         Svatky svatky = new Svatky();
-//        assertTrue(svatky.jeVSeznamu("Nataša"));
-//        assertFalse(svatky.jeVSeznamu("Krumpáč"));
 
-        // Arrange
         String jmenoJeVSeznamu = "Nataša";
         String jmenoNeniVSeznamu = "Pytlik";
 
-        // Act
-        boolean resultJmenoJeVSeznamu = svatky.jeVSeznamu(jmenoJeVSeznamu);
-        boolean resultJmenoNeniVSeznamu = svatky.jeVSeznamu(jmenoNeniVSeznamu);
-
-        // Assert
-        assertTrue(resultJmenoJeVSeznamu, "Jmeno " + jmenoJeVSeznamu + " melo byt v seznamu.");
-        assertFalse(resultJmenoNeniVSeznamu, "Jmeno " + jmenoNeniVSeznamu + " nemelo byt v seznamu.");
+        assertTrue(svatky.jeVSeznamu(jmenoJeVSeznamu), "Jmeno " + jmenoJeVSeznamu + " melo byt v seznamu.");
+        assertFalse(svatky.jeVSeznamu(jmenoNeniVSeznamu), "Jmeno " + jmenoNeniVSeznamu + " nemelo byt v seznamu.");
     }
 
     /**
@@ -50,6 +49,7 @@ class SvatkyTest {
     @Test
     void getPocetJmen() {
         Svatky svatky = new Svatky();
+
         assertEquals(37, svatky.getPocetJmen());
     }
 
@@ -59,29 +59,49 @@ class SvatkyTest {
     @Test
     void getSeznamJmen() {
         Svatky svatky = new Svatky();
-        assertEquals(37, svatky.getSeznamJmen().size());
+
+        Set<String> seznamJmen = Set.of("Valdemar", "Maxim", "Kamila", "Ivo", "Zbyšek", "Claudia", "Vladimíra", "Nataša", "Viliam", "Maxmilián", "Emil", "Stibor", "Ferdinand", "Svatava", "Vanesa", "Filip", "Žofie", "Viola", "Alex", "Aneta", "Bonifác", "Ctibor", "Květoslav", "Klaudie", "Monika", "Jana", "Klaudia", "Přemysl", "Zikmund", "Stanislav", "Alexej", "Vilém", "Radoslav", "Vladimír", "Blažena", "Pankrác", "Servác");
+
+        assertEquals(37, svatky.getSeznamJmen().size(), "Velikost seznamu jmen mela byt 37.");
+        assertEquals(seznamJmen, svatky.getSeznamJmen(), "Seznam jmen je nesprávný.");
     }
 
     /**
      * Testuje metodu {@link Svatky#pridejSvatek(String, int, int)}
      */
     @Test
-    void pridejSvatekDenMesicInt() {
+    void pridejSvatekIntInt() {
         Svatky svatky = new Svatky();
-        svatky.pridejSvatek("Alex", 14, 6);
-        boolean result = svatky.jeVSeznamu("Alex");
-        assertTrue(result);
+
+        String ocekavaneJmeno = "Allison";
+        int ocekavanyDenVMesici = 14;
+        int ocekavanyMesic = 6;
+
+        svatky.pridejSvatek(ocekavaneJmeno, ocekavanyDenVMesici, ocekavanyMesic);
+
+        assertTrue(svatky.jeVSeznamu(ocekavaneJmeno), "Jmeno " + ocekavaneJmeno + " melo byt v seznamu.");
+        assertEquals(ocekavanyDenVMesici, svatky.vratKdyMaSvatek(ocekavaneJmeno).getDayOfMonth(), "Den " + ocekavanyDenVMesici + " mel byt dnem, kdy ma svatek " + ocekavaneJmeno + ".");
+        assertEquals(ocekavanyMesic, svatky.vratKdyMaSvatek(ocekavaneJmeno).getMonthValue(), "Mesic " + ocekavanyMesic + " mel byt mesicem, kdy ma svatek " + ocekavaneJmeno + ".");
+        assertEquals(38, svatky.getPocetJmen(), "Pocet svatku se mel zvetsit o jedna.");
     }
 
     /**
      * Testuje metodu {@link Svatky#pridejSvatek(String, int, Month)}
      */
     @Test
-    void pridejSvatekDenMesicMonth() {
+    void pridejSvatekIntMonth() {
         Svatky svatky = new Svatky();
-        svatky.pridejSvatek("Andrew", MonthDay.of(6, 15));
-        boolean result = svatky.jeVSeznamu("Andrew");
-        assertTrue(result);
+
+        String ocekavaneJmeno = "Andrew";
+        int ocekavanyDen = 15;
+        Month ocekavanyMesic = Month.JUNE;
+
+        svatky.pridejSvatek(ocekavaneJmeno, ocekavanyDen, ocekavanyMesic);
+
+        assertTrue(svatky.jeVSeznamu(ocekavaneJmeno), "Jmeno " + ocekavaneJmeno + " melo byt v seznamu.");
+        assertEquals(ocekavanyDen, svatky.vratKdyMaSvatek(ocekavaneJmeno).getDayOfMonth(), "Den " + ocekavanyDen + " mel byt dnem, kdy ma svatek " + ocekavaneJmeno + ".");
+        assertEquals(ocekavanyMesic, svatky.vratKdyMaSvatek(ocekavaneJmeno).getMonth(), "Mesic " + ocekavanyMesic + " mel byt mesicem, kdy ma svatek " + ocekavaneJmeno + ".");
+        assertEquals(38, svatky.getPocetJmen(), "Pocet svatku se mel zvetsit o jedna.");
     }
 
     /**
@@ -90,9 +110,15 @@ class SvatkyTest {
     @Test
     void pridejSvatekMonthDay() {
         Svatky svatky = new Svatky();
-        svatky.pridejSvatek("Aiden", MonthDay.of(Month.JUNE, 16));
-        boolean result = svatky.jeVSeznamu("Aiden");
-        assertTrue(result);
+
+        String ocekavaneJmeno = "Aiden";
+        MonthDay ocekavaneDatum = MonthDay.of(Month.JUNE, 16);
+
+        svatky.pridejSvatek(ocekavaneJmeno, ocekavaneDatum);
+
+        assertTrue(svatky.jeVSeznamu(ocekavaneJmeno), "Jmeno " + ocekavaneJmeno + " melo byt v seznamu.");
+        assertEquals(ocekavaneDatum, svatky.vratKdyMaSvatek(ocekavaneJmeno), "Datum " + ocekavaneDatum + " melo byt datem, kdy ma svatek " + ocekavaneJmeno + ".");
+        assertEquals(38, svatky.getPocetJmen(), "Pocet svatku se mel zvetsit o jedna.");
     }
 
     /**
@@ -101,7 +127,12 @@ class SvatkyTest {
     @Test
     void smazSvatek() {
         Svatky svatky = new Svatky();
-        svatky.smazSvatek("Alex");
-        assertFalse(svatky.jeVSeznamu("Alex"));
+
+        String mazaneJmeno = "Alex";
+
+        svatky.smazSvatek(mazaneJmeno);
+
+        assertFalse(svatky.jeVSeznamu(mazaneJmeno), "Jmeno " + mazaneJmeno + " nema byt po smazani v seznamu.");
+        assertEquals(36, svatky.getPocetJmen(), "Pocet jmen se mel po smazani o jedna snizit.");
     }
 }
